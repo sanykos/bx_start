@@ -192,19 +192,27 @@ if ($isFilter || $isSidebar): ?>
 				?>
 				<script>
 					$(function() {
-						// $('.sort-price').on('click', 'a', function() {
-						// 	//console.log(this);
-						// 	return false;
-						// })
-						//console.log('run');
+						$('#sort-price__select').on('change', function() {
+							var ajax_id = '<?=$arParams['AJAX_ID']?>';
+							var url = $(this).val()+'&bxajaxid='+ajax_id;
+							BX.ajax.insertToNode(url, 'comp_'+ajax_id);
+							return false;
+						});
 					});
 				</script>
 				<div class="sort-price">
 					<div class="col-12 mb-2">
 						<div class="row">
 							<div class="col mb-2">
-								<a data-sort="asc" class="active" href="<?=$url_asc?>" <?=$onclick_asc?>>по возрастанию</a> |
-								<a data-sort="desc" href="<?=$url_desc?>" <?=$onclick_desc?>>по убыванию</a>
+									<select class="custom-select main-select" id="sort-price__select">
+										<option selected disabled>Сортировать по цене</option>
+										<option value="<?=$url_asc?>">по возрастанию</option>
+										<option value="<?=$url_desc?>">по убыванию</option>
+									</select>
+								<?php /*
+									<a data-sort="asc" class="active" href="<?=$url_asc?>" <?=$onclick_asc?>>по возрастанию</a> |
+									<a data-sort="desc" href="<?=$url_desc?>" <?=$onclick_desc?>>по убыванию</a>*/
+								?>
 							</div>
 							<div class="col-auto sort-price__view mx-n2 mb-2">
 								<a href="#" title="Сетка" class="mx-2 active" >
@@ -218,15 +226,7 @@ if ($isFilter || $isSidebar): ?>
 					</div>
 				</div>
 
-				<script>
-					
-				</script>
-				<?/*
-				<select onchange="BX.ajax.insertToNode('/catalog/kormlenie_zhivotnykh/zernovye/filter/cml2_manufacturer-is-c2b5e957-3cdc-11ea-8b1c-1c872c611f89-or-c70dd681-3d1b-11ea-8b1c-1c872c611f89-or-ad10b910-1da7-11ea-8b1c-1c872c611f89/apply/?order=asc&sort=price', '<?='comp_'.$arParams['AJAX_ID']?>'); return false;">
-					<option value="<?=$url_asc?>">по возр</option>
-					<option value="<?=$url_desc?>">по убыв</option>
-				</select>*/
-				?>
+			
 			<? $intSectionID = $APPLICATION->IncludeComponent(
 				"bitrix:catalog.section",
 				"",
