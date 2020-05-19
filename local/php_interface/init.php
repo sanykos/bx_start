@@ -159,6 +159,50 @@ class CCustomAuthHookEvent {
 }
 
 
+// Письмо с логином и паролем на почту при оформлении заказа
+AddEventHandler('sale', 'OnOrderNewSendEmail', array('CSendOrderPass', 'OnOrderNewSendEmailHandler'));
+AddEventHandler('main', 'OnBeforeUserAdd', array('CSendOrderPass', 'OnBeforeUserAddHandler'));
+class CSendOrderPass {
+
+	private static $newUserPass = false;
+	private static $newUserLogin = false;
+	//private static $toSend = [];
+ 
+	public static function OnBeforeUserAddHandler($arFields) {
+	   self::$newUserLogin = $arFields['LOGIN'];
+	   self::$newUserPass = $arFields['PASSWORD'];	//    self::$toSend["LOGIN"] = $arFields['LOGIN'];
+	}
+ 
+	public static function OnOrderNewSendEmailHandler($ID, $eventName, &$arFields) {
+	   if (self::$newUserPass === false) {
+		  $arFields['PASSWORD'] = '';
+	   } else {
+		  $arFields['PASSWORD'] = "\n".'Ваш логин: '.self::$newUserLogin;
+		  $arFields['PASSWORD'] .= "\n".'Ваш пароль: '.self::$newUserPass;
+	   }
+	}
+ }
+//  AddEventHandler("main", "OnAfterUserRegister", "OnAfterUserRegisterHandler");
+//  function OnAfterUserRegisterHandler(&$arFields)
+// {
+//    if (intval($arFields["ID"])>0)
+//    {
+//       $toSend = Array();
+//       $toSend["PASSWORD"] = $arFields["CONFIRM_PASSWORD"];
+//       $toSend["EMAIL"] = $arFields["EMAIL"];
+//       $toSend["USER_ID"] = $arFields["ID"];
+//       $toSend["USER_IP"] = $arFields["USER_IP"];
+//       $toSend["USER_HOST"] = $arFields["USER_HOST"];
+//       $toSend["LOGIN"] = $arFields["LOGIN"];
+//       $toSend["NAME"] = (trim ($arFields["NAME"]) == "")? $toSend["NAME"] = htmlspecialchars('<Не указано>'): $arFields["NAME"];
+//       $toSend["LAST_NAME"] = (trim ($arFields["LAST_NAME"]) == "")? $toSend["LAST_NAME"] = htmlspecialchars('<Не указано>'): $arFields["LAST_NAME"];
+//       CEvent::SendImmediate ("MY_USER_INFO", SITE_ID, $toSend);
+//    }
+//    return $arFields;
+// }
+
+
+
 
 // Меняем размер изображений
 // На вход подаем массив изображения(Например $arResult["ITEM"]["DETAIL_PICTURE"])
